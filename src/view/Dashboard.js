@@ -1,7 +1,13 @@
 import * as React from "react";
-import { Card, CardContent, CardHeader, Grid } from '@material-ui/core';
+import { Card, CardContent, CardHeader, Grid,Container, Typography, withStyles } from '@material-ui/core';
 
 import { Title } from 'react-admin';
+
+const style = {
+    root : {
+        marginTop : 20
+    }
+}
 
 class dashboard extends React.Component {
 
@@ -9,12 +15,10 @@ class dashboard extends React.Component {
         console.log("constructor")
         super(prop)
         this.state = { projects: []}
-        
-        
+                
     }
     
     componentDidMount(){
-        console.log("componentDidMount");
         const authToken = localStorage.getItem('auth')
         const request  = new Request(process.env.REACT_APP_API_URL + '/projects', {
             method: 'GET',
@@ -23,25 +27,36 @@ class dashboard extends React.Component {
                 'Authorization': `Bearer ${authToken}` 
             })
         });
+
         fetch(request)
             .then(response => response.json())
             .then(response => {
-                console.log("state update")
                 this.setState({
                     projects: response
                 })
             })
+            .catch(err => console.log(JSON.stringify(err)))
     }
-
+    
     render(){
-        console.log("Render dashboard");
-        return (<Grid container spacing={2} justify="center" alignItems="flex-start" direction="row">
+        const { classes } = this.props
+        return (
+    <Container className={classes.root}>
+        <Grid container spacing={2} justify="center" alignItems="flex-start" direction="row">
             {this.state.projects.map(p => {
-                return (<Card item><CardContent>{p.name}</CardContent></Card>)
+                return (
+                <Grid key={p.name} item xs={12} sm={4}>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="h5">{p.name}</Typography>
+                            <Typography variant="body2">{p.description}</Typography>
+                        </CardContent>                        
+                    </Card>
+                </Grid>)
             })}
-        </Grid> )
-
-    }
+        </Grid>
+    </Container> 
+    )}
 
 }
-export default dashboard;            
+export default withStyles(style)(dashboard);            
