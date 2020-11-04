@@ -1,11 +1,14 @@
 import * as React from "react";
-import { Card, CardContent, CardHeader, Grid,Container, Typography, withStyles } from '@material-ui/core';
+import { Card, CardContent, CardActionArea, Grid,Container, Typography, withStyles } from '@material-ui/core';
 
 import { Title } from 'react-admin';
 
 const style = {
     root : {
         marginTop : 20
+    },
+    cardContent : {
+        minHeight: 250
     }
 }
 
@@ -45,13 +48,15 @@ class dashboard extends React.Component {
         <Grid container spacing={2} justify="center" alignItems="flex-start" direction="row">
             {this.state.projects.map(p => {
                 return (
-                <Grid key={p.name} item xs={12} sm={4}>
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h5">{p.name}</Typography>
-                            <Typography variant="body2">{p.description}</Typography>
-                        </CardContent>                        
-                    </Card>
+                <Grid key={p.name} item xs={12} sm={4}>                    
+                    <Card >
+                        <CardActionArea href={`/${p.name}/`}>
+                            <CardContent className={classes.cardContent}>
+                                <Typography variant="h5">{p.name}</Typography>
+                                <Typography variant="body2">{p.description}</Typography>
+                            </CardContent>
+                        </CardActionArea>                        
+                    </Card>                    
                 </Grid>)
             })}
         </Grid>
